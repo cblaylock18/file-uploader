@@ -38,19 +38,23 @@ app.use((req, res, next) => {
 });
 
 const userRouter = require("./routes/userRouter");
+const uploadRouter = require("./routes/uploadRouter");
 
-// to delete
+// to delete below
 async function testUsers() {
     const allUsers = await prisma.user.findMany();
     console.log(allUsers);
 }
 
 testUsers();
+// to delete above
 
 app.use("/user", userRouter);
 
+app.use("/upload-file", uploadRouter);
+
 app.use("/", (req, res) => {
-    res.render("index", { title: "The title" });
+    res.render("index");
 });
 
 app.use("*", (req, res) => {
