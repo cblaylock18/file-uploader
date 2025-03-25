@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/css/styles.css" />
+        <title>Sign Up</title>
+    </head>
+    <body>
+        <h1>Sign up!</h1>
+        <a class="home-link" href="/">Return to Home</a>
+        <%- include("partials/errors.ejs") %>
+        <form action="/user/sign-up" method="post">
+            <label for="firstName">First Name: </label>
+            <input type="text" name="firstName" id="firstName"
+            placeholder="first name" value="<%= locals.firstName ? firstName :
+            "" %>" required />
+            <label for="lastName">Last Name: </label>
+            <input type="text" name="lastName" id="lastName"
+            placeholder="<%="last name"%>" value="<%= locals.lastName ? lastName
+            : "" %>" required />
+            <label for="username">Username: </label>
+            <input type="text" name="username" id="username"
+            placeholder="<%="last name"%>" value="<%= locals.username ? username
+            : "" %>" required /> required />
+            <label for="password">Password: </label>
+            <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="password"
+                required
+            />
+            <label for="confirmPassword">Confirm Password: </label>
+            <input
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                placeholder="confirm password"
+                required
+            />
+            <button type="submit">Sign Up</button>
+        </form>
+    </body>
+</html>

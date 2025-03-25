@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>File Uploader</title>
+    </head>
+    <body>
+        <h1>Welcome to the File Uploader</h1>
+        <% if (locals.currentUser) {%>
+        <div>
+            <h2>
+                Welcome back <%= currentUser.firstName + " " +
+                currentUser.lastName %>!
+            </h2>
+            <a href="/user/log-out" class="log-out">Log Out</a>
+        </div>
+        <% } else { %>
+        <h2>Please Log In</h2>
+        <%- include("partials/errors") %>
+        <form action="/user/log-in" method="POST">
+            <label for="username">Username</label>
+            <input
+                id="username"
+                name="username"
+                placeholder="username"
+                type="text"
+                required
+            />
+            <label for="password">Password</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="password"
+                required
+            />
+            <button type="submit">Log In</button>
+        </form>
+        <a href="/user/sign-up">Or Click Here to Sign Up!</a>
+        <%}%>
+    </body>
+</html>
