@@ -21,9 +21,28 @@ model Session {
 }
 
 model User {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   firstName String
   lastName  String
-  username  String @unique
+  username  String   @unique
   password  String
+  folders   Folder[]
+}
+
+model Folder {
+  id          String  @id @default(uuid())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String
+  successorId String? @unique
+  successor   Folder? @relation("FolderStructure", fields: [successorId], references: [id])
+  predecessor Folder? @relation("FolderStructure")
+  files       File[]
+}
+
+model File {
+  id       String @id @default(uuid())
+  name     String
+  URL      String
+  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId String
 }
