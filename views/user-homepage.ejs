@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>File Uploader</title>
+    </head>
+    <body>
+        <h1>Welcome, <%=currentUser.firstName%>, to your file uploader!</h1>
+        <% if (locals.parentFolder) { %>
+            <h2>Currently viewing <%=parentFolder.name%>.</h2>
+            <a href="/file-uploader/main/<%=parentFolder.parentId ? parentFolder.parentId : ""%>">Go Up a Level</a>
+        <%}%>
+        <p>Here you can manage your files and folders.</p>
+        <a href="/user/log-out">Log Out</a>
+        <%- include("partials/errors.ejs") %>
+        <form action="/file-uploader/new-folder/<%=locals.parentFolder ? parentFolder.id : ""%>" method="post">
+            <label for="name">Folder Name: </label>
+            <input type="text" id="name" name="name" placeholder="folder's name"
+            value="<%= locals.name ? name : "" %>" required />
+            <button type="submit">Create a New Folder</button>
+        </form>
+        <%- include("partials/errors.ejs") %>
+        <form action="/file-uploader/upload-file/<%=locals.parentFolder ? parentFolder.id : ""%>" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" />
+            <button type="submit">Upload a New File</button>
+        </form>
+        <%- include("partials/folders") %> <%- include("partials/files") %>
+    </body>
+</html>

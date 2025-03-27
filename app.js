@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 const userRouter = require("./routes/userRouter");
-const uploadRouter = require("./routes/uploadRouter");
+const fileUploaderRouter = require("./routes/fileUploaderRouter");
 
 // to delete below
 async function testUsers() {
@@ -51,9 +51,12 @@ testUsers();
 
 app.use("/user", userRouter);
 
-app.use("/upload-file", uploadRouter);
+app.use("/file-uploader", fileUploaderRouter);
 
 app.use("/", (req, res) => {
+    if (req.user) {
+        return res.redirect("/file-uploader/main");
+    }
     res.render("index");
 });
 

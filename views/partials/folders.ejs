@@ -1,0 +1,12 @@
+<% if (locals.folders) {%>
+<ul class="folders">
+    <% folders.forEach((folder) => { %>
+    <li>
+        <a href="/file-uploader/main/<%=folder.id%>"><%= folder.name %></a>
+        <%if(folder.children) {%>
+        <p><%=folder.children.length%></p>
+        <%}%>
+    </li>
+    <% }); %>
+</ul>
+<%}%>

@@ -27,12 +27,14 @@ model User {
   username  String   @unique
   password  String
   folders   Folder[]
+  File      File[]
 }
 
 model Folder {
   id       String   @id @default(uuid())
   user     User     @relation(fields: [userId], references: [id])
   userId   String
+  name     String
   children Folder[] @relation("FolderStructure")
   parent   Folder?  @relation("FolderStructure", fields: [parentId], references: [id])
   parentId String?
@@ -40,9 +42,11 @@ model Folder {
 }
 
 model File {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String
   name     String
   url      String
-  folder   Folder @relation(fields: [folderId], references: [id])
-  folderId String
+  folder   Folder? @relation(fields: [folderId], references: [id])
+  folderId String?
 }
