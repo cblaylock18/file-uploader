@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Update Folder</title>
+    </head>
+    <body>
+        <a href="/file-uploader/main/">Return Home</a>
+        <h1>Update Folder Name Using this Form</h1>
+        <h2>Current Name: <%= folder.name %></h2>
+        <%- include("partials/errors.ejs") %>
+        <form
+            action="/file-uploader/update-folder/<%=folder.id%>"
+            method="post"
+        >
+            <label for="name">Rename: </label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="folder's name"
+                value="<%= folder.name %>"
+                required
+            />
+            <label for="moveTo">Move to:</label>
+            <select name="moveTo" id="moveTo" required>
+                <option value="root">Root Folder</option>
+                <%folderList.forEach(newFolder => {%> <%if(folder.parentId ===
+                newFolder.id) {%>
+                <option value="<%=newFolder.id%>" selected>
+                    <%=newFolder.name%>
+                </option>
+                <%} else if (folder.id === newFolder.id) {%> <%} else {%>
+                <option value="<%=newFolder.id%>"><%=newFolder.name%></option>
+                <%}%><%});%>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+    </body>
+</html>

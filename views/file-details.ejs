@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>File Details</title>
+    </head>
+    <body>
+        <a href="/file-uploader/main/">Return Home</a>
+        <h1>File Details</h1>
+        <ul>
+            <li>Name: <span><%=file.name%></span></li>
+            <li>Size: <span><%=file.size%></span></li>
+            <li>Upload Date & Time: <span><%=file.uploadTime%></span></li>
+            <a
+                href="/file-uploader/file/download/<%=file.id%>"
+                download="<%=file.name%>"
+                >Download</a
+            >
+        </ul>
+    </body>
+</html>

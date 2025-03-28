@@ -20,4 +20,31 @@ fileUploaderRouter.post(
 
 fileUploaderRouter.post("/new-folder", fileUploaderController.newFolderPost);
 
+fileUploaderRouter.post(
+    "/delete-folder/:folderId/:parentId",
+    fileUploaderController.deleteFolderPost
+);
+
+fileUploaderRouter.post(
+    "/delete-folder/:folderId",
+    fileUploaderController.deleteFolderPost
+);
+
+fileUploaderRouter.get(
+    "/update-folder/:folderId",
+    fileUploaderController.updateFolderGet
+);
+
+fileUploaderRouter.post(
+    "/update-folder/:folderId",
+    fileUploaderController.updateFolderPost
+);
+
+fileUploaderRouter.get("/file/:fileId", fileUploaderController.fileDetailsGet);
+
+fileUploaderRouter.get(
+    "/file/download/:fileId",
+    fileUploaderController.fileDownloadGet
+);
+
 module.exports = fileUploaderRouter;

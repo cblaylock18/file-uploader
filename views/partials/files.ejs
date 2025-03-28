@@ -1,8 +1,15 @@
 <% if (locals.files) {%>
 <ul class="files">
     <% files.forEach((file) => { %>
-    <li><a href="/file-uploader/file/<%=file.id%>"><%= file.name %></a></li>
-    <!-- will eventually be a link to download a file -->
+    <li>
+        <p><%= file.name %></p>
+        <a href="/file-uploader/file/<%=file.id%>">View Details</a>
+        <a
+            href="/file-uploader/file/download/<%=file.id%>"
+            download="<%=file.name%>"
+            >Download</a
+        >
+    </li>
     <% }); %>
 </ul>
 <%}%>
