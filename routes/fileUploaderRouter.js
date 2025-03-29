@@ -47,4 +47,9 @@ fileUploaderRouter.get(
     fileUploaderController.fileDownloadGet
 );
 
+fileUploaderRouter.get(
+    "/file/delete/:fileId",
+    fileUploaderController.fileDeleteGet
+);
+
 module.exports = fileUploaderRouter;

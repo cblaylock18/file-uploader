@@ -40,15 +40,6 @@ app.use((req, res, next) => {
 const userRouter = require("./routes/userRouter");
 const fileUploaderRouter = require("./routes/fileUploaderRouter");
 
-// to delete below
-async function testUsers() {
-    const allUsers = await prisma.user.findMany();
-    console.log(allUsers);
-}
-
-testUsers();
-// to delete above
-
 app.use("/user", userRouter);
 
 app.use("/file-uploader", fileUploaderRouter);

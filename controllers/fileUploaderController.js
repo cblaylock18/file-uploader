@@ -2,11 +2,7 @@ const prisma = require("../prisma/prisma");
 const asyncHandler = require("../middleware/asyncHandler");
 const { body, validationResult } = require("express-validator");
 const { getFoldersAndFiles } = require("../prisma/queries");
-require("dotenv").config();
-const cloudinary = require("cloudinary").v2();
-
-const multer = require("multer");
-const upload = multer({ dest: "temp-uploads" });
+const uploadHelper = require("../middleware/uploadHelper");
 
 const folderNameValidation = [
     body("name").trim().notEmpty().withMessage("Folder name is required."),
@@ -31,13 +27,24 @@ const folderUpdateValidation = [
 ];
 
 const uploadFilePost = [
-    upload.single("file"),
+    uploadHelper.upload.single("file"),
     asyncHandler(async (req, res) => {
         const parentId = req.params.id;
 
+        if (!req.file) {
+            return res.redirect(`/file-uploader/main/${parentId || ""}`);
+        }
+
+        const uploadResult = await uploadHelper.handleCloudinaryUpload(
+            req.file.buffer,
+            req.file.originalname
+        );
+
         const data = {
             name: req.file.originalname,
-            url: req.file.path,
+            url: uploadResult.secure_url,
+            publicId: uploadResult.public_id,
+            resourceType: uploadResult.resource_type,
             size: req.file.size,
             user: { connect: { id: req.user.id } },
         };
@@ -46,6 +53,7 @@ const uploadFilePost = [
         }
 
         await prisma.file.create({ data });
+
         res.redirect(`/file-uploader/main/${parentId || ""}`);
     }),
 ];
@@ -209,8 +217,6 @@ const updateFolderPost = [
                     : { disconnect: true };
         }
 
-        console.log(data);
-
         if (Object.keys(data).length > 0) {
             await prisma.folder.update({
                 where: {
@@ -260,10 +266,51 @@ const fileDownloadGet = asyncHandler(async (req, res) => {
     });
 
     if (!file) {
-        return res.status(404).send("File not found");
+        return res.redirect(`/file-uploader/main`);
     }
 
-    res.download(file.url, file.name);
+    const downloadUrl = file.url.replace("/upload/", "/upload/fl_attachment/");
+
+    res.redirect(downloadUrl);
+});
+
+const fileDeleteGet = asyncHandler(async (req, res) => {
+    const fileId = req.params.fileId;
+
+    const file = await prisma.file.findUnique({
+        where: {
+            id: fileId,
+            userId: req.user.id,
+        },
+        select: {
+            publicId: true,
+            folderId: true,
+            resourceType: true,
+        },
+    });
+
+    if (!file) {
+        return res.redirect(`/file-uploader/main`);
+    }
+
+    try {
+        await uploadHelper.handleCloudinaryDestroy(
+            file.publicId,
+            file.resourceType
+        );
+
+        await prisma.file.delete({
+            where: {
+                id: fileId,
+                userId: req.user.id,
+            },
+        });
+
+        res.redirect(`/main/${file.folderId || ""}`);
+    } catch (error) {
+        console.error("Error deleting file:", error);
+        res.status(500).json({ error: "Failed to delete file" });
+    }
 });
 
 module.exports = {
@@ -276,4 +323,5 @@ module.exports = {
     updateFolderPost,
     fileDetailsGet,
     fileDownloadGet,
+    fileDeleteGet,
 };
